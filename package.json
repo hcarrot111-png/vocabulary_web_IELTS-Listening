@@ -1,6 +1,14 @@
 {
-  "name": "ielts-listening-vocabulary-web-demo",
-  "version": "21.0.0",
+  "name": "listening-vocabulary-web",
+  "version": "1.0.0",
   "private": true,
-  "description": "Static IELTS listening vocabulary web demo"
+  "description": "听力词汇练习网页端可继续开发工程",
+  "scripts": {
+    "dev": "http-server . -c-1 -p 4173",
+    "start": "npm run dev",
+    "test": "node tests/smoke-check.js"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }

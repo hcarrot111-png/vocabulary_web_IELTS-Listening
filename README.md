@@ -1,20 +1,41 @@
-# IELTS Listening Vocabulary Web Demo
+# 听力词汇练习网页端
 
-当前网页版基准：V21。
+这是可交给开发人员继续开发的完整前端工程包，不是只有一个 HTML 的演示包。
 
-## 上传 GitHub 并开启 GitHub Pages
-1. 把本部署包内的所有文件上传到 GitHub 仓库根目录。
-2. 确保 `index.html` 在仓库根目录。
-3. GitHub 仓库进入 Settings → Pages。
-4. Build and deployment 选择 Deploy from a branch。
-5. Branch 选择 main，Folder 选择 /(root)，保存。
-6. 等待部署完成即可访问。
+## 目录
 
-## 文件
-- index.html：网站入口（完整网页代码）
-- 404.html：GitHub Pages 静态回退页
-- .nojekyll：关闭 Jekyll 处理
-- README.md：部署说明
-- package.json：项目元信息；本项目无需 npm 构建
+- `index.html`：工程入口与页面结构
+- `assets/styles.css`：页面样式和响应式布局
+- `assets/app.js`：词书、复习、统计与交互逻辑
+- `preview/index.html`：不需安装依赖的单文件预览版
+- `tests/smoke-check.js`：核心文件与功能入口冒烟检查
+- `docs/DEVELOPMENT.md`：开发与上线说明
+- `docs/DATA-CONTRACT.md`：后续接口化所需的数据结构
 
-网页的 CSS、JavaScript 和 Demo 数据均已包含在 index.html 中。
+## 本地运行
+
+需要 Node.js 18 或更高版本。
+
+```bash
+npm install
+npm run dev
+```
+
+打开 `http://localhost:4173`。
+
+## 检查
+
+```bash
+npm test
+node --check assets/app.js
+```
+
+## 直接预览
+
+双击 `preview/index.html` 即可查看当前完整 Demo。实际开发请修改根目录的 `index.html` 和 `assets/` 中的源码。
+
+## 部署
+
+这是静态前端工程。将整个工程上传到静态站点服务，并将发布目录设为工程根目录即可；首页是 `index.html`。
+
+> 当前为前端 Demo，数据保存在浏览器本地。多用户、账号同步、真实语音资源和服务端导出需后续接入 API。
