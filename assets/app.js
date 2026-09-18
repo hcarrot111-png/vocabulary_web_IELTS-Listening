@@ -386,18 +386,24 @@ function renderAnswerSpell(){
 
  if(cells[0]) cells[0].focus();
 
- document.getElementById('spellSubmit').onclick=()=>{
-   state.submitted=true;
+ const submitButton=document.getElementById('spellSubmit');
+ const buttonRow=submitButton.parentElement;
+ let firstCheckDone=false;
+
+ function markCurrentSpelling(){
    const typed=cells.map(c=>c.value.toLowerCase());
    cells.forEach((c,i)=>{
      c.classList.remove('correct','wrong');
      c.classList.add(typed[i]===d.word[i]?'correct':'wrong');
-     c.disabled=true;
    });
-   const ok=typed.join('')===d.word;
-   if(!ok)addReviewWord(d,'答案词','拼写错误');
+   return typed.join('')===d.word;
+ }
+
+ function revealSpellingAnswer(ok){
+   state.submitted=true;
+   cells.forEach(c=>c.disabled=true);
    const meaningInline=document.getElementById('answerMeaningInline');
-   if(meaningInline) meaningInline.innerHTML=` <span style="margin-left:14px;font-weight:700">${d.meaning}</span>`;
+   if(meaningInline && !state.answerShowMeaning) meaningInline.innerHTML=` <span style="margin-left:14px;font-weight:700">${d.meaning}</span>`;
    const r=document.getElementById('spellResult');
    r.style.color=ok?'var(--green)':'var(--red)';
    r.textContent=ok?'✓ 拼写正确':'拼写完成：绿色为正确字母，红色为错误字母；该词已自动加入复习。';
@@ -409,7 +415,6 @@ function renderAnswerSpell(){
      r.insertAdjacentElement('afterend',answer);
    }
 
-   // Append all answer-word information after checking.
    if(!document.querySelector('.answer-info')){
      const info=document.createElement('div');
      info.className='answer-info';
@@ -424,6 +429,31 @@ function renderAnswerSpell(){
        </div>`;
      document.querySelector('.spell-wrap').appendChild(info);
    }
+   buttonRow.style.display='none';
+ }
+
+ submitButton.onclick=()=>{
+   const ok=markCurrentSpelling();
+   if(!firstCheckDone && !ok){
+     firstCheckDone=true;
+     addReviewWord(d,'答案词','拼写错误');
+     const r=document.getElementById('spellResult');
+     r.style.color='var(--red)';
+     r.textContent='拼写完成：绿色为正确字母，红色为错误字母；该词已自动加入复习。';
+     submitButton.textContent='再次确认';
+     const viewAnswer=document.createElement('button');
+     viewAnswer.className='btn';
+     viewAnswer.id='spellViewAnswer';
+     viewAnswer.textContent='查看答案';
+     viewAnswer.style.marginLeft='12px';
+     viewAnswer.onclick=()=>revealSpellingAnswer(markCurrentSpelling());
+     buttonRow.appendChild(viewAnswer);
+     const firstWrong=cells.find(c=>c.classList.contains('wrong'));
+     if(firstWrong) firstWrong.focus();
+     return;
+   }
+   if(!ok && !firstCheckDone)addReviewWord(d,'答案词','拼写错误');
+   revealSpellingAnswer(ok);
  };
 
  document.getElementById('answerReplay').onclick=()=>{

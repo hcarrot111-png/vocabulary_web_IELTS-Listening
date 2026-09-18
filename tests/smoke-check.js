@@ -30,4 +30,10 @@ for (const feature of ['showView', 'openType', 'startMode', 'startReview', 'open
   }
 }
 
+for (const spellingFeature of ['再次确认', 'spellViewAnswer', 'revealSpellingAnswer', '!state.answerShowMeaning']) {
+  if (!script.includes(spellingFeature)) {
+    throw new Error(`缺少最新版拼写练习功能: ${spellingFeature}`);
+  }
+}
+
 console.log('工程结构与核心功能入口检查通过。');
