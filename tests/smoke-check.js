@@ -36,4 +36,10 @@ for (const spellingFeature of ['再次确认', 'spellViewAnswer', 'revealSpellin
   }
 }
 
+for (const latestFeature of ['buildKeyOptions', 'buildTopicOptions', "translationHighlights:['缺勤']", "translationHighlights:['成就']", "translationHighlights:['广告']"]) {
+  if (!script.includes(latestFeature)) {
+    throw new Error(`缺少最新版词表或解析功能: ${latestFeature}`);
+  }
+}
+
 console.log('工程结构与核心功能入口检查通过。');

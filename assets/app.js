@@ -1,27 +1,42 @@
 let currentType='key',selectedGroup=12;
 
 const keyData=[
- {word:'incorporate',phon:'/ɪnˈkɔːpəreɪt/',pos:'v.',meaning:'包含；纳入；合并',opts:[{en:'include',zh:'包括；包含',correct:true},{en:'comprise',zh:'由……组成；包含',correct:true},{en:'contain',zh:'包含；容纳',correct:true},{en:'integrate',zh:'整合；使成为一体',correct:true},{en:'exclude',zh:'排除；不包括',correct:false}],question:'The new course will ______ practical training into the existing programme.',source:'The new course will incorporate practical training into the existing programme.',translation:'这门新课程将把实践培训纳入现有课程体系。',translationHighlights:['把','纳入']},
- {word:'purchase',phon:'/ˈpɜːtʃəs/',pos:'v.',meaning:'购买',opts:[{en:'buy',zh:'购买',correct:true},{en:'acquire',zh:'获得；购得',correct:true},{en:'obtain',zh:'获得',correct:true},{en:'get',zh:'获得；得到',correct:true},{en:'sell',zh:'出售',correct:false}],question:'Visitors can ______ tickets at the front desk.',source:'Visitors can purchase tickets at the front desk.',translation:'访客可以在前台购票。',translationHighlights:['购票']}
+ {word:'alternative',phon:'/ɔːlˈtɜːnətɪv/',pos:'adj.',meaning:'备选的；可供选择的',opts:[{en:'another',zh:'另一个；其他的',correct:true}],question:'Customers have to pay extra for transferring to another date.',source:"You're welcome to change to an alternative date or a different tour, for a small administrative fee.",translation:'欢迎您更改日期或改报其他行程，只需支付少量行政手续费。',translationHighlights:['更改']},
+ {word:'stimulate',phon:'/ˈstɪmjuleɪt/',pos:'v.',meaning:'刺激；激发',opts:[{en:'keep active',zh:'保持活跃',correct:true}],question:'Games which stimulate the brain have been found to help people with schizophrenia.',source:'Recent studies have shown that computer-assisted games designed to keep the brain active can help improve their episodic memory.',translation:'近期研究表明，旨在保持大脑活跃的电脑辅助游戏有助于改善情景记忆。',translationHighlights:['保持','活跃']}
 ];
 
-const keySynData=[
- {word:'incorporate',phon:'/ɪnˈkɔːpəreɪt/',pos:'v.',meaning:'包含；纳入；合并',opts:[{en:'include',zh:'包括；包含',correct:true},{en:'comprise',zh:'由……组成；包含',correct:true},{en:'contain',zh:'包含；容纳',correct:true},{en:'integrate',zh:'整合；使成为一体',correct:true},{en:'exclude',zh:'排除；不包括',correct:false}],question:'The new course will ______ practical training into the existing programme.',source:'The new course will incorporate practical training into the existing programme.',translation:'这门新课程将把实践培训纳入现有课程体系。',translationHighlights:['把','纳入']},
- {word:'purchase',phon:'/ˈpɜːtʃəs/',pos:'v.',meaning:'购买',opts:[{en:'buy',zh:'购买',correct:true},{en:'acquire',zh:'获得；购得',correct:true},{en:'obtain',zh:'获得',correct:true},{en:'get',zh:'获得；得到',correct:true},{en:'sell',zh:'出售',correct:false}],question:'Visitors can ______ tickets at the front desk.',source:'Visitors can purchase tickets at the front desk.',translation:'访客可以在前台购票。',translationHighlights:['购票']},
- {word:'require',phon:'/rɪˈkwaɪə(r)/',pos:'v.',meaning:'需要；要求',opts:[{en:'need',zh:'需要',correct:true},{en:'demand',zh:'要求；需要',correct:true},{en:'call for',zh:'需要；要求',correct:true},{en:'necessitate',zh:'使成为必要',correct:true},{en:'avoid',zh:'避免',correct:false}],question:'The position will ______ previous work experience.',source:'The position will require previous work experience.',translation:'这个岗位需要有以往的工作经验。',translationHighlights:['需要']}
+const keyOptionCandidates=[
+ {en:'another',zh:'另一个；其他的'},
+ {en:'keep active',zh:'保持活跃'},
+ {en:'alternative',zh:'备选的；可供选择的'},
+ {en:'stimulate',zh:'刺激；激发'},
+ {en:'achievement',zh:'成就'}
 ];
+function buildKeyOptions(d){
+ const correct=(d.opts||[]).filter(o=>o.correct);
+ const target=correct.length>2?5:3;
+ const used=new Set([d.word.toLowerCase(),...correct.map(o=>o.en.toLowerCase())]);
+ const distractors=keyOptionCandidates.filter(o=>!used.has(o.en.toLowerCase())).slice(0,Math.max(0,target-correct.length)).map(o=>({...o,correct:false}));
+ return [...correct,...distractors].slice(0,target);
+}
+keyData.forEach(d=>{d.opts=buildKeyOptions(d)});
+
+const keySynData=keyData;
 
 
 const answerData=[
- {word:'music',phon:'/ˈmjuːzɪk/',pos:'n.',meaning:'音乐',example:'She listens to music while studying.',translation:'她学习时会听<span class="hl">音乐</span>。'},
- {word:'station',phon:'/ˈsteɪʃn/',pos:'n.',meaning:'车站',example:'The station is only five minutes away.',translation:'车站离这里只有五分钟路程。'},
- {word:'garden',phon:'/ˈɡɑːdn/',pos:'n.',meaning:'花园',example:'There is a small garden behind the house.',translation:'房子后面有一个小花园。'}
+ {word:'absence',phon:'/ˈæbsəns/',pos:'n.',meaning:'缺席；不存在',difficulty:'B2',example:'Conflict-related stress can cause absence that may last for months.',translation:'与冲突有关的压力可能导致缺勤长达数月。',translationHighlights:['缺勤']},
+ {word:'achievement',phon:'/əˈtʃiːvmənt/',pos:'n.',meaning:'功绩，成就',difficulty:'B1',example:'Promotion goals focus on achievement.',translation:'晋升目标以成就为导向。',translationHighlights:['成就']}
 ];
 const topicData=[
- {word:'accommodation',phon:'/əˌkɒməˈdeɪʃn/',pos:'n.',meaning:'住宿；住处',options:['住宿；住处','交通；运输','设备；器材','预约；预订'],example:'The hotel provides comfortable accommodation for all guests.',translation:'这家酒店为所有客人提供舒适的<span class="hl">住宿</span>。'},
- {word:'transport',phon:'/ˈtrænspɔːt/',pos:'n.',meaning:'交通；运输',options:['环境；生态','交通；运输','费用；价格','登记；注册'],example:'Public transport is available from the airport to the city centre.',translation:'从机场到市中心有公共交通可乘坐。'},
- {word:'reservation',phon:'/ˌrezəˈveɪʃn/',pos:'n.',meaning:'预约；预订',options:['维修；保养','路线；路径','预约；预订','材料；原料'],example:'You should make a reservation before visiting the restaurant.',translation:'去这家餐厅之前你应该先预订。'}
+ {word:'advertisement',phon:'/ˈædvɜːtɪsmənt/',pos:'n.',meaning:'广告',topic:'商业',difficulty:'A2',options:['广告','麻醉剂；麻醉的','功绩，成就'],example:'I saw your advertisement about copying pictures to disk and I’d like a bit more information about what you do.',translation:'我看到了你们把照片复制到光盘上的广告，想进一步了解一下你们提供的服务。',translationHighlights:['广告']},
+ {word:'anaesthetic',phon:'/ˌænɪsˈθetɪk/',pos:'n.',meaning:'麻醉剂；麻醉的',topic:'健康',difficulty:'C1',options:['麻醉剂；麻醉的','广告','缺席；不存在'],example:'Music even helped patients under general anaesthetic.',translation:'音乐甚至对处于全身麻醉状态的患者也有帮助。',translationHighlights:['麻醉']}
 ];
+function buildTopicOptions(d){
+ const pool=[d.meaning,...(d.options||[]),...topicData.map(x=>x.meaning),...answerData.map(x=>x.meaning)];
+ return [...new Set(pool.filter(Boolean))].slice(0,3);
+}
+topicData.forEach(d=>{d.options=buildTopicOptions(d)});
 
 const state={
  index:0,selected:new Set(),submitted:false,analysis:false,auto:true,speed:1,interval:1,count:'1次',paused:false,
@@ -29,19 +44,15 @@ const state={
 };
 
 let reviewCount=10,reviewMode='练习模式';
-let reviewWords=JSON.parse(localStorage.getItem('vocabReviewWords')||'null')||[
- {word:'incorporate',phon:'/ɪnˈkɔːpəreɪt/',pos:'v.',meaning:'包含；纳入；合并',book:'考点词',date:'9月14日2026年',age:'day',reason:'同替误选',example:'The new course will incorporate practical training into the existing programme.'},
- {word:'station',phon:'/ˈsteɪʃn/',pos:'n.',meaning:'车站',book:'答案词',date:'9月12日2026年',age:'week',reason:'拼写错误',example:'The station is only five minutes away.'},
- {word:'accommodation',phon:'/əˌkɒməˈdeɪʃn/',pos:'n.',meaning:'住宿；住处',book:'话题词',date:'9月5日2026年',age:'month',reason:'词义混淆',example:'The hotel provides comfortable accommodation for all guests.'},
- {word:'reservation',phon:'/ˌrezəˈveɪʃn/',pos:'n.',meaning:'预约；预订',book:'话题词',date:'7月20日2026年',age:'old',reason:'词义混淆',example:'You should make a reservation before visiting the restaurant.'}
-];
+const reviewStorageKey='vocabReviewWords_c11_21_v1';
+let reviewWords=JSON.parse(localStorage.getItem(reviewStorageKey)||'[]');
 
 function todayCN(){const d=new Date();return `${d.getMonth()+1}月${d.getDate()}日${d.getFullYear()}年`}
 function addReviewWord(d,book,reason){
  const item={word:d.word,phon:d.phon||'',pos:d.pos||'',meaning:d.meaning||'',book,date:todayCN(),age:'day',reason,example:d.example||'',question:d.question||'',source:d.source||'',translation:d.translation||'',translationHighlights:d.translationHighlights||[],opts:d.opts||[]};
  const old=reviewWords.findIndex(x=>x.word===d.word);
  if(old>=0)reviewWords.splice(old,1);
- reviewWords.unshift(item);localStorage.setItem('vocabReviewWords',JSON.stringify(reviewWords));
+ reviewWords.unshift(item);localStorage.setItem(reviewStorageKey,JSON.stringify(reviewWords));
 }
 function toggleDropdown(id){
  const target=document.getElementById(id),willOpen=!target.classList.contains('open');
@@ -77,15 +88,16 @@ function cleanHTML(s=''){return s.replace(/<[^>]*>/g,'')}
 function zhFragments(d){const text=cleanHTML(d.translation||''),meaningParts=(d.meaning||'').split(/[；;]/).map(s=>s.trim()).filter(s=>s&&text.includes(s));return meaningParts.length?[...new Set(meaningParts)]:[...new Set(d.translationHighlights||[])]}
 function openWordDetail(word){
  const saved=reviewWords.find(v=>v.word===word);if(!saved)return;const x=wordDetailSource(saved);
- const head=`<div class="detail-date">上次练习时间：${x.date}</div><div class="detail-head"><div><div class="detail-wordline"><h2>${x.word}</h2><button class="detail-audio" onclick="speak('${x.word}')" aria-label="播放${x.word}读音">🔊</button></div><div class="detail-phon">${x.phon}</div></div><button class="detail-close" onclick="closeWordDetail()">×</button></div><div class="detail-meaning"><span style="color:#758296;margin-right:8px">${x.pos}</span>${x.meaning}</div>`;
+ const detailMeta=x.book==='答案词'?vocabMetaHTML(x):x.book==='话题词'?vocabMetaHTML(x,{showTopic:true}):'';
+ const head=`<div class="detail-date">上次练习时间：${x.date}</div><div class="detail-head"><div><div class="detail-wordline"><h2>${x.word}</h2><button class="detail-audio" onclick="speak('${x.word}')" aria-label="播放${x.word}读音">🔊</button></div><div class="detail-phon">${x.phon}</div></div><button class="detail-close" onclick="closeWordDetail()">×</button></div>${detailMeta}<div class="detail-meaning"><span style="color:#758296;margin-right:8px">${x.pos}</span>${x.meaning}</div>`;
  let body='';
  if(x.book==='考点词'){
-   const synonyms=(x.opts||[]).filter(o=>o.correct),first=synonyms[0];
-   const question=(x.source||x.question||'').replace('______',x.word);
-   const corresponding=first&&question?question.replace(new RegExp(`\\b${x.word}\\b`,'i'),first.en):question;
+   const synonyms=(x.opts||[]).filter(o=>o.correct),terms=[x.word,...synonyms.map(o=>o.en)];
+   const question=x.question||'';
+   const corresponding=x.source||'';
    body=`<div class="detail-section"><h4>同义替换</h4><div class="synonym-list">${synonyms.map(o=>`<div class="synonym-row"><strong>${o.en}</strong><span>${o.zh}</span><button class="synonym-audio" onclick="speak('${o.en}')" aria-label="播放${o.en}读音">🔊</button></div>`).join('')||'<div class="sub">暂无同替数据</div>'}</div></div>
-   <div class="detail-section"><div class="detail-label">题目原文</div><div class="detail-example">${highlightKeySource(question,x.word)}</div></div>
-   <div class="detail-section"><div class="detail-label">对应原文</div><div class="detail-example">${first?highlightKeySource(corresponding,first.en):corresponding}</div></div>
+   <div class="detail-section"><div class="detail-label">题目原文</div><div class="detail-example">${highlightKeySource(question,terms)}</div></div>
+   <div class="detail-section"><div class="detail-label">对应原文</div><div class="detail-example">${highlightKeySource(corresponding,terms)}</div></div>
    <div class="detail-section"><div class="detail-label">对应原文中文翻译</div><div class="detail-example">${highlightChineseFragments(cleanHTML(x.translation||''),zhFragments(x))}</div></div>`;
  }else{
    body=`<div class="detail-section"><div class="detail-label">例句</div><div class="detail-example">${highlightExample(x.example||'',x.word)}</div></div>
@@ -152,7 +164,7 @@ function showGroups(t,activeGroup=defaultGroup(t)){
 function openType(t,g){
  state.fromReview=false;currentType=t;selectedGroup=g;
  const modes=t==='key'
-  ?[['刷词速记','快速听音，复习释义和同义替换','key-flash'],['同替练习','听主词条后，从5个音频中多选同义替换','key-syn']]
+ ?[['刷词速记','快速听音，复习释义和同义替换','key-flash'],['同替练习','听主词条后，从音频选项中选择同义替换','key-syn']]
   :t==='answer'
   ?[['刷词速记','快速听音并熟悉答案词','answer-flash'],['拼写练习','听音后根据字母数量完整拼写答案词','answer-spell']]
   :[['刷词速记','快速听音并记忆话题词含义','topic-flash'],['词义速记','只听发音，选择正确的中文含义','topic-meaning']];
@@ -168,7 +180,8 @@ function closeModeModal(e){if(e&&e.target!==e.currentTarget)return;document.getE
 function resetItem(){state.selected=new Set();state.submitted=false;state.analysis=false;state.reveal=false;state.paused=false}
 function startMode(mode){closeModeModal();state.mode=mode;state.index=0;resetItem();showView('exerciseView');renderExercise()}
 function speak(t,rate=state.speed){if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=rate;speechSynthesis.speak(u)}
-function currentData(){if(state.fromReview)return state.reviewQueue[state.reviewIndex];if(state.mode==='key-syn')return keySynData[state.index%keySynData.length];if(state.mode.startsWith('key'))return keyData[state.index%keyData.length];if(state.mode.startsWith('answer'))return answerData[state.index%answerData.length];return topicData[state.index%topicData.length]}
+function currentModeData(){if(state.mode==='key-syn')return keySynData;if(state.mode.startsWith('key'))return keyData;if(state.mode.startsWith('answer'))return answerData;return topicData}
+function currentData(){if(state.fromReview)return state.reviewQueue[state.reviewIndex];const data=currentModeData();return data[state.index%data.length]}
 
 function settingsHTML(extra=''){
  return `<div class="settings" id="settings"><div class="settings-head"><h2>⚙ 练习设置</h2><button class="close" id="closeSettings">×</button></div>
@@ -181,7 +194,7 @@ function settingsHTML(extra=''){
 }
 function commonCardStart(title,subtitle,extraSettings=''){
  const heading=state.fromReview?`复习 · ${title}`:`第${selectedGroup}组 · ${title}`;
- const progress=state.fromReview?`${state.reviewIndex+1} / ${state.reviewQueue.length}`:`${state.index+1} / 20`;
+ const progress=state.fromReview?`${state.reviewIndex+1} / ${state.reviewQueue.length}`:`${state.index+1} / ${currentModeData().length}`;
  return `<div class="exercise-page"><div class="header"><div><h1>${heading}</h1><div class="sub">${subtitle}</div></div><button class="back" onclick="returnToWordList()">← 返回词汇列表</button></div>
  <div class="card" id="card"><div class="card-top"><span>${title} / ${subtitle}</span><strong>${progress}</strong></div><button class="gear" id="gear">⚙</button>${settingsHTML(extraSettings)}<div class="main">`;
 }
@@ -208,9 +221,11 @@ function highlightChineseAnswer(sentence,fragments=[]){
  return result;
 }
 
-function highlightKeySource(sentence,word){
- const escaped=word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
- return sentence.replace(new RegExp(`\\b${escaped}\\b`,'gi'),m=>`<span class="hl">${m}</span>`);
+function highlightKeySource(sentence,words){
+ const terms=(Array.isArray(words)?words:[words]).flatMap(word=>String(word||'').split(/\s+/)).filter(Boolean);
+ if(!terms.length)return sentence;
+ const escaped=[...new Set(terms)].sort((a,b)=>b.length-a.length).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+ return sentence.replace(new RegExp(`\\b(${escaped.join('|')})\\b`,'gi'),m=>`<span class="hl">${m}</span>`);
 }
 function highlightChineseFragments(sentence,fragments=[]){
  let result=sentence;
@@ -224,12 +239,13 @@ function highlightChineseFragments(sentence,fragments=[]){
 
 function renderKeySyn(){
  const d=currentData();
+ const synonymTerms=d.opts.filter(o=>o.correct).map(o=>o.en);
  document.getElementById('exerciseView').innerHTML=commonCardStart('考点词','同替练习')+
  `<div class="word-line"><div class="word">${d.word}</div><button class="small-audio" onclick="speak('${d.word}')">🔊</button></div><div class="phon">${d.phon}</div><div class="pos">${d.pos}${(state.submitted||state.analysis)?` <span style="margin-left:10px">${d.meaning}</span>`:''}</div>
- <div class="status">🔊 准备自动播放 1 / 5 …</div><div class="prompt">🎧 请选择所有含义相同或相近的词语（可多选）</div>
+ <div class="status">🔊 准备自动播放 1 / ${d.opts.length} …</div><div class="prompt">🎧 请选择所有含义相同或相近的词语（可多选）</div>
  <div class="options">${d.opts.map((o,i)=>`<div class="opt" data-opt="${i}"><button class="circle" data-audio="${i}">🔊</button><div class="select-row"><button class="pickbox ${state.selected.has(i)?'selected':''}" data-pick="${i}"></button><span class="letter">${String.fromCharCode(65+i)}</span></div><div class="meta">${(state.submitted||state.analysis)?`<strong>${o.en}</strong><br>${o.zh}`:''}</div></div>`).join('')}</div>
  <div class="feedback" id="feedback"></div>
- ${state.analysis?`<div class="analysis"><h3>▤ 解析</h3><div class="block"><div class="label">题目</div><div class="q">${d.question.replace('______',`<span class="hl">${d.word}</span>`)}</div></div><div class="block"><div class="label">对应原文</div><div class="q">${highlightKeySource(d.source,d.word)}</div></div><div class="block"><div class="label">对应原文中文翻译</div><div>${highlightChineseFragments(d.translation,d.translationHighlights||[])}</div></div></div>`:''}`+
+ ${state.analysis?`<div class="analysis"><h3>▤ 解析</h3><div class="block"><div class="label">题目</div><div class="q">${highlightKeySource(d.question,[d.word,...synonymTerms])}</div></div><div class="block"><div class="label">对应原文</div><div class="q">${highlightKeySource(d.source,[d.word,...synonymTerms])}</div></div><div class="block"><div class="label">对应原文中文翻译</div><div>${highlightChineseFragments(d.translation,d.translationHighlights||[])}</div></div></div>`:''}`+
  commonBottom([
  '<button class="ctrl" id="prev"><span class="ico">⏮</span>上一词</button>','<button class="ctrl"><span class="ico">Ⅱ</span>暂停</button>','<button class="ctrl" id="next"><span class="ico">⏭</span>下一词</button>','<button class="ctrl" id="replay"><span class="ico">↻</span>再听一遍</button>','<button class="ctrl" id="analysisBtn"><span class="ico">☼</span>查看解析</button>','<button class="ctrl primary" id="submit"><span class="ico">✓</span>确认答案</button>'
  ]);
@@ -281,6 +297,7 @@ function renderAnswerFlash(){
     <button class="small-audio" onclick="speak('${d.word}')">🔊</button>
   </div>
   <div class="phon">${d.phon}</div>
+  ${vocabMetaHTML(d)}
   <div class="pos">${d.pos}${revealMeaning?` <span style="margin-left:12px;font-weight:700">${d.meaning}</span>`:''}</div>
 
   ${state.analysis?`
@@ -333,12 +350,20 @@ function highlightExample(sentence,word){
  return sentence.replace(new RegExp(`\\b${escaped}\\b`,'gi'),m=>`<span class="hl">${m}</span>`);
 }
 
+function vocabMetaHTML(d,{showTopic=false}={}){
+ const chips=[];
+ if(showTopic&&d.topic)chips.push(`<span class="vocab-chip"><span>话题</span><strong>${d.topic}</strong></span>`);
+ if(d.difficulty)chips.push(`<span class="vocab-chip"><span>词汇难度</span><strong>${d.difficulty}</strong></span>`);
+ return chips.length?`<div class="vocab-meta">${chips.join('')}</div>`:'';
+}
+
 function renderAnswerSpell(){
  const d=currentData();
  const extra=`<div class="row"><div class="rowtop"><span>显示释义</span><button class="toggle ${state.answerShowMeaning?'on':''}" id="answerMeaningToggle"></button></div></div>`;
 
  document.getElementById('exerciseView').innerHTML=commonCardStart('答案词','拼写练习',extra)+
  `<div class="word-line"><button class="circle" style="border:0" onclick="speak('${d.word}')">🔊</button></div>
+  ${vocabMetaHTML(d)}
   <div class="pos" style="margin-top:22px">词性：${d.pos}<span id="answerMeaningInline">${state.submitted?` <span style="margin-left:14px;font-weight:700">${d.meaning}</span>`:''}</span></div>
 
   ${state.answerShowMeaning && !state.submitted ? `<div class="meaning" style="font-size:18px">${d.meaning}</div>` : ''}
@@ -359,7 +384,7 @@ function renderAnswerSpell(){
      </div>
      <div class="info-line">
        <div class="label">例句中文翻译</div>
-       <div>${d.translation}</div>
+       <div>${highlightChineseAnswer(d.translation,d.translationHighlights||[d.meaning])}</div>
      </div>
    </div>`:''}`+
  commonBottom([
@@ -425,7 +450,7 @@ function renderAnswerSpell(){
        </div>
        <div class="info-line">
          <div class="label">例句中文翻译</div>
-         <div>${d.translation}</div>
+         <div>${highlightChineseAnswer(d.translation,d.translationHighlights||[d.meaning])}</div>
        </div>`;
      document.querySelector('.spell-wrap').appendChild(info);
    }
@@ -482,6 +507,7 @@ function renderTopicFlash(){
     <button class="small-audio" onclick="speak('${d.word}')">🔊</button>
   </div>
   <div class="phon">${d.phon}</div>
+  ${vocabMetaHTML(d,{showTopic:true})}
   <div class="pos">${d.pos}${revealMeaning?` <span style="margin-left:12px;font-weight:700">${d.meaning}</span>`:''}</div>
 
   ${state.analysis?`
@@ -493,7 +519,7 @@ function renderTopicFlash(){
       </div>
       <div class="block">
         <div class="label">例句中文释义</div>
-        <div>${d.translation}</div>
+        <div>${highlightChineseAnswer(d.translation,d.translationHighlights||[d.meaning])}</div>
       </div>
     </div>`:''}`+
 
@@ -533,6 +559,7 @@ function renderTopicMeaning(){
 
  document.getElementById('exerciseView').innerHTML=commonCardStart('话题词','词义速记')+
  `<div class="word-line"><button class="circle" style="border:0" onclick="speak('${d.word}')">🔊</button></div>
+  ${vocabMetaHTML(d,{showTopic:true})}
   <div class="prompt">听发音，选择正确的中文含义</div>
 
   ${state.submitted?`
@@ -560,7 +587,7 @@ function renderTopicMeaning(){
       </div>
       <div class="block">
         <div class="label">例句中文释义</div>
-        <div>${d.translation}</div>
+        <div>${highlightChineseAnswer(d.translation,d.translationHighlights||[d.meaning])}</div>
       </div>
     </div>`:''}`+
 
