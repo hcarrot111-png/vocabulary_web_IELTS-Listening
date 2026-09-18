@@ -562,7 +562,7 @@ function renderTopicMeaning(){
   ${vocabMetaHTML(d,{showTopic:true})}
   <div class="prompt">听发音，选择正确的中文含义</div>
 
-  ${state.submitted?`
+  ${(state.submitted||state.analysis)?`
     <div class="analysis" style="text-align:center;margin-top:24px">
       <div class="word-line">
         <div class="word" style="font-size:34px">${d.word}</div>
@@ -595,7 +595,7 @@ function renderTopicMeaning(){
    '<button class="ctrl" id="prev"><span class="ico">⏮</span>上一词</button>',
    '<button class="ctrl"><span class="ico">Ⅱ</span>暂停</button>',
    '<button class="ctrl" id="next"><span class="ico">⏭</span>下一词</button>',
-   '<button class="ctrl" onclick="speak(\''+d.word+'\')"><span class="ico">↻</span>再听一遍</button>',
+   '<button class="ctrl" id="topicReplay"><span class="ico">↻</span>再听一遍</button>',
    '<button class="ctrl" id="topicAnalysis"><span class="ico">☼</span>查看解析</button>',
    '<button class="ctrl primary" id="topicSubmit"><span class="ico">✓</span>确认答案</button>'
  ]);
@@ -603,19 +603,26 @@ function renderTopicMeaning(){
  wireBase();
 
  document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{
-   if(state.submitted)return;
+   if(state.submitted||state.analysis)return;
    state.selected=new Set([+b.dataset.choice]);
    renderTopicMeaning();
  });
 
- if(state.submitted){
+ if(state.submitted||state.analysis){
    document.querySelectorAll('[data-choice]').forEach((b,i)=>{
      if(d.options[i]===d.meaning)b.classList.add('correct');
      else if(state.selected.has(i))b.classList.add('wrong');
    });
  }
 
+ if(state.analysis&&!state.submitted){
+   const r=document.getElementById('topicResult');
+   r.className='feedback ok';
+   r.textContent='正确答案已标出。';
+ }
+
  document.getElementById('topicSubmit').onclick=()=>{
+   state.analysis=false;
    state.submitted=true;
    const chosen=[...state.selected][0];
    const ok=chosen!==undefined && d.options[chosen]===d.meaning;
@@ -629,6 +636,12 @@ function renderTopicMeaning(){
  document.getElementById('topicAnalysis').onclick=()=>{
    state.analysis=!state.analysis;
    renderTopicMeaning();
+ };
+
+ document.getElementById('topicReplay').onclick=()=>{
+   resetItem();
+   renderTopicMeaning();
+   setTimeout(()=>speak(d.word),160);
  };
 }
 

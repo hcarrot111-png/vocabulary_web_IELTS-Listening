@@ -42,4 +42,10 @@ for (const latestFeature of ['buildKeyOptions', 'buildTopicOptions', "translatio
   }
 }
 
+for (const topicMeaningFeature of ['id="topicReplay"', 'state.analysis=false;', 'if(state.submitted||state.analysis)']) {
+  if (!script.includes(topicMeaningFeature)) {
+    throw new Error(`缺少话题词词义速记状态逻辑: ${topicMeaningFeature}`);
+  }
+}
+
 console.log('工程结构与核心功能入口检查通过。');
